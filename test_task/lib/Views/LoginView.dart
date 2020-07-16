@@ -147,8 +147,8 @@ class _LoginViewState extends State<LoginView> {
     // TODO: implement initState
     super.initState();
 
-    txtEmailContoller.text = "somebody2@email.com";
-    txtPasswordContoller.text = "test!ng1";
+    txtEmailContoller.text = "";//""somebody2@email.com";
+    txtPasswordContoller.text = "";//""test!ng1";
   }
 
   @override
