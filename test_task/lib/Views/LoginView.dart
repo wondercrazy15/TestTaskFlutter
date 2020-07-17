@@ -80,15 +80,27 @@ class _LoginViewState extends State<LoginView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+
           Expanded(
             child: GestureDetector(
               child: Container(
                 color: Colors.transparent,
                 child: Center(
-                  child: Text(
-                      'Login',
-                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white)
-                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                          model.isBusy?'Logging In':'Login',
+                          style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white)
+                      ),
+                      model.isBusy?Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: CircularProgressIndicator(
+                          backgroundColor: Colors.white,
+                        ),
+                      ):Container(),
+                    ],
+                  )
                 ),
               ),
               onTap: () async {
@@ -110,16 +122,24 @@ class _LoginViewState extends State<LoginView> {
                   return;
                 }else{
                   LoginRequest request = LoginRequest(email: email, password: password);
-
+                  model.setBusy(true);
                   try{
                     await model.Login(request);
                     final AppPreference = await SharedPreferences.getInstance();
+                    model.setBusy(false);
+                    setState(() {
+
+                    });
                     AppPreference.setString(Globals.AppToken, model.response.token);
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context)=>AddWishListView()
                     ));
                   }catch(e){
                     Globals.showToastMessage(context, e.toString().replaceAll("Exception: ", ""));
+                    model.setBusy(false);
+                    setState(() {
+
+                    });
                   }
 
                 }
@@ -147,8 +167,8 @@ class _LoginViewState extends State<LoginView> {
     // TODO: implement initState
     super.initState();
 
-    txtEmailContoller.text = "";//""somebody2@email.com";
-    txtPasswordContoller.text = "";//""test!ng1";
+    txtEmailContoller.text = "somebody2@email.com";
+    txtPasswordContoller.text = "test!ng1";
   }
 
   @override

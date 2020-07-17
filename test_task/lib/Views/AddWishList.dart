@@ -86,10 +86,21 @@ class _AddWishListViewState extends State<AddWishListView> {
               child: Container(
                 color: Colors.transparent,
                 child: Center(
-                  child: Text(
-                      'Submit',
-                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white)
-                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                          model.isBusy?'Submmiting':'Submit',
+                          style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0, color: Colors.white)
+                      ),
+                      model.isBusy?Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: CircularProgressIndicator(
+                          backgroundColor: Colors.white,
+                        ),
+                      ):Container(),
+                    ],
+                  )
                 ),
               ),
               onTap: () async {
@@ -129,8 +140,10 @@ class _AddWishListViewState extends State<AddWishListView> {
                       code: code,
                       url: url,
                   );
+                  model.setBusy(true);
                   try{
                     await model.AddWishList(request);
+                    model.setBusy(false);
                     setState(() async {
                       print(model.response);
                       loadEmpty();
@@ -140,6 +153,7 @@ class _AddWishListViewState extends State<AddWishListView> {
                     });
                   }catch(e){
                     Globals.showToastMessage(context, e.toString().replaceAll("Exception: ", ""));
+                    model.setBusy(false);
                   }
 
                 }
